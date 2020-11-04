@@ -1,5 +1,7 @@
 .editorconfig
 .git
+.idea
+.vs-code
 AUTHORS.md
 CONTRIBUTING.md
 LICENSE
