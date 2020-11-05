@@ -10,9 +10,10 @@ RUN go mod download
 FROM base AS build
 ARG TARGETOS
 ARG TARGETARCH
+ARG BIN_NAME=application
 RUN --mount=target=. \
     --mount=type=cache,target=/root/.cache/go-build \
-    GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /out/example .
+    GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /out/$BIN_NAME .
 
 FROM base AS unit-test
 RUN --mount=target=. \
@@ -29,12 +30,12 @@ RUN --mount=target=. \
     golangci-lint run --timeout 10m0s ./...
 
 FROM scratch AS bin-unix
-COPY --from=build /out/example /
+COPY --from=build /out/$BIN_NAME /
 
 FROM bin-unix AS bin-linux
 FROM bin-unix AS bin-darwin
 
 FROM scratch AS bin-windows
-COPY --from=build /out/example /example.exe
+COPY --from=build /out/$BIN_NAME /$BIN_NAME.exe
 
 FROM bin-${TARGETOS} AS bin
