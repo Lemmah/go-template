@@ -12,3 +12,7 @@ bin/example:
 .PHONY: unit-test
 unit-test:
 	@docker build . --target unit-test
+
+.PHONY: lint
+lint:
+	@docker build . --target lint
